@@ -79,7 +79,8 @@ const Explore = ({ marketplace, nft }) => {
         </div>
         : (
           <main style={{ padding: "1rem 0" }}>
-            <h2 className='App-loader'>No listed assets</h2>
+            <h2 className='App-loader'>Oops .... the Marketplace is empty</h2>
+            <h4>You can Create and Sell your own NFT's <a href='/create'>here</a></h4>
           </main>
         )}
     </div>

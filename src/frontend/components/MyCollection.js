@@ -71,7 +71,8 @@ export default function MyPurchases({ marketplace, nft, account }) {
         </div>
         : (
           <main style={{ padding: "1rem 0" }}>
-            <h2 className='App-loader'>No purchases</h2>
+            <h2 className='App-loader'>You have not purchased any Digital Assets yet</h2>
+            <h4>Explore the Marketplace to find NFT's <a href='/'>here</a></h4>
           </main>
         )}
     </div>

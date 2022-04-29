@@ -97,7 +97,8 @@ export default function MyListedItems({ marketplace, nft, account }) {
         </div>
         : (
           <main style={{ padding: "1rem 0" }}>
-            <h2 className='App-loader'>No listed assets</h2>
+            <h2 className='App-loader'>You have not minted any Digital Assets yet</h2>
+            <h4>You can Create and Sell your own NFT's <a href='/create'>here</a></h4>
           </main>
         )}
     </div>
