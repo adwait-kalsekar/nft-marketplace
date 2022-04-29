@@ -1,4 +1,25 @@
+table, th, td {
+    padding: 5px;
+    font-size: medium;
+    font-weight: 400;
+ }
+
 .About-text{
     color: white;
+    background-color: rgb(0, 0, 50);
+    padding: 10px;
+    margin: 50px;
+}
+
+.Info-text{
+    color: white;
     text-align: left;
+    font-size: medium;
+}
+
+.Info{
+    background-color: rgb(0, 0, 25);
+    padding: 10px;
+    margin: 50px;
+    border: 2px solid rgb(0, 0, 50);
 }

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
 import { Row, Col, Card } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 import './App.css';
+import './Card.css';
 
 export default function MyPurchases({ marketplace, nft, account }) {
   const [loading, setLoading] = useState(true)
@@ -61,9 +63,9 @@ export default function MyPurchases({ marketplace, nft, account }) {
           <Row xs={1} md={2} lg={4} className="g-4 py-5">
             {purchases.map((item, idx) => (
               <Col key={idx} className="overflow-hidden">
-                <Card>
+                <Card className='Card'>
                   <Card.Img variant="top" src={item.image} />
-                  <Card.Footer>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
+                  <Card.Footer className='Card-text'>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
                 </Card>
               </Col>
             ))}
@@ -72,7 +74,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
         : (
           <main style={{ padding: "1rem 0" }}>
             <h2 className='App-loader'>You have not purchased any Digital Assets yet</h2>
-            <h4>Explore the Marketplace to find NFT's <a href='/'>here</a></h4>
+            <h4>Explore the Marketplace to find NFT's <Link to={'/'}>here</Link></h4>
           </main>
         )}
     </div>

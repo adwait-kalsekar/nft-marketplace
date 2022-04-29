@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
 import { Row, Col, Card, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 import './App.css';
 import './Card.css';
@@ -80,7 +81,7 @@ const Explore = ({ marketplace, nft }) => {
         : (
           <main style={{ padding: "1rem 0" }}>
             <h2 className='App-loader'>Oops .... the Marketplace is empty</h2>
-            <h4>You can Create and Sell your own NFT's <a href='/create'>here</a></h4>
+            <h4>You can Create and Sell your own NFT's <Link to={'/create'}>here</Link></h4>
           </main>
         )}
     </div>

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
 import { Row, Col, Card } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 import './App.css';
+import './Card.css';
 
 function renderSoldItems(items) {
   return (
@@ -11,9 +13,9 @@ function renderSoldItems(items) {
       <Row xs={1} md={2} lg={4} className="g-4 py-3">
         {items.map((item, idx) => (
           <Col key={idx} className="overflow-hidden">
-            <Card>
+            <Card className='Card'>
               <Card.Img variant="top" src={item.image} />
-              <Card.Footer>
+              <Card.Footer className='Card-text'>
                 For {ethers.utils.formatEther(item.totalPrice)} ETH - Recieved {ethers.utils.formatEther(item.price)} ETH
               </Card.Footer>
             </Card>
@@ -86,9 +88,9 @@ export default function MyListedItems({ marketplace, nft, account }) {
           <Row xs={1} md={2} lg={4} className="g-4 py-3">
             {listedItems.map((item, idx) => (
               <Col key={idx} className="overflow-hidden">
-                <Card>
+                <Card className='Card'>
                   <Card.Img variant="top" src={item.image} />
-                  <Card.Footer>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
+                  <Card.Footer className='Card-text'>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
                 </Card>
               </Col>
             ))}
@@ -98,7 +100,7 @@ export default function MyListedItems({ marketplace, nft, account }) {
         : (
           <main style={{ padding: "1rem 0" }}>
             <h2 className='App-loader'>You have not minted any Digital Assets yet</h2>
-            <h4>You can Create and Sell your own NFT's <a href='/create'>here</a></h4>
+            <h4>You can Create and Sell your own NFT's <Link to={'/create'}>here</Link></h4>
           </main>
         )}
     </div>
