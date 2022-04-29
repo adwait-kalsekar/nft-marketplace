@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
 import { Row, Col, Card, Button } from 'react-bootstrap'
 
-import './App.css';
+import './About.css';
 
 const About = () => {
   return (
-    <h1>Populate This</h1>
+    <div className='About-text'>
+      <h1>Our Info</h1>
+    </div>
   );
 }
 export default About

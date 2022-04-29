@@ -3,6 +3,7 @@ import { ethers } from "ethers"
 import { Row, Col, Card, Button } from 'react-bootstrap'
 
 import './App.css';
+import './Card.css';
 
 const Explore = ({ marketplace, nft }) => {
   const [loading, setLoading] = useState(true)
@@ -56,11 +57,11 @@ const Explore = ({ marketplace, nft }) => {
           <Row xs={1} md={2} lg={4} className="g-4 py-5">
             {items.map((item, idx) => (
               <Col key={idx} className="overflow-hidden">
-                <Card>
+                <Card className='Card'>
                   <Card.Img variant="top" src={item.image} />
                   <Card.Body color="secondary">
-                    <Card.Title>{item.name}</Card.Title>
-                    <Card.Text>
+                    <Card.Title className='Card-text'>{item.name}</Card.Title>
+                    <Card.Text className='Card-text'>
                       {item.description}
                     </Card.Text>
                   </Card.Body>
