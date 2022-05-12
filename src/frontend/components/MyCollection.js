@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
-import { Row, Col, Card } from 'react-bootstrap'
+import { Row, Col, Card, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
 import './App.css';
 import './Card.css';
+//import { Button } from 'bootstrap';
 
 export default function MyPurchases({ marketplace, nft, account }) {
   const [loading, setLoading] = useState(true)
@@ -34,11 +35,23 @@ export default function MyPurchases({ marketplace, nft, account }) {
         description: metadata.description,
         image: metadata.image
       }
+      console.log(typeof(i.price))
       return purchasedItem
     }))
     setLoading(false)
     setPurchases(purchases)
   }
+  
+  const sellNFT = async (item) => {
+    // approve marketplace to spend nft
+    await(await nft.setApprovalForAll(marketplace.address, true)).wait()
+    // add nft to marketplace
+    //item.price = item.price / 10**18
+    const listingPrice = ethers.utils.parseEther(ethers.utils.formatEther(item.price))
+    console.log(`listing price is ${(listingPrice)}`)
+    await(await marketplace.makeItem(nft.address, item.itemId, listingPrice)).wait()
+  }
+  
   useEffect(() => {
     loadPurchasedItems()
   }, [])
@@ -65,7 +78,16 @@ export default function MyPurchases({ marketplace, nft, account }) {
               <Col key={idx} className="overflow-hidden">
                 <Card className='Card'>
                   <Card.Img variant="top" src={item.image} />
-                  <Card.Footer className='Card-text'>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
+                  <Card.Footer className='Card-text'>
+                    <div>Purchased for&nbsp;
+                    {ethers.utils.formatEther(item.totalPrice)} ETH
+                    <br></br>
+                    <br></br>
+                    <Button onClick={() => sellNFT(item)} variant="primary" size="lg">
+                      Sell for {ethers.utils.formatEther(item.totalPrice)}
+                    </Button>
+                    </div>
+                  </Card.Footer>
                 </Card>
               </Col>
             ))}

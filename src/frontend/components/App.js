@@ -9,6 +9,7 @@ import Create from './Create.js'
 import MyListedItems from './MyListedItems.js'
 import MyCollection from './MyCollection.js'
 import About from "./About";
+import Profile from "./Profile";
 import MarketplaceAbi from '../contractsData/Marketplace.json'
 import MarketplaceAddress from '../contractsData/Marketplace-address.json'
 import NFTAbi from '../contractsData/NFT.json'
@@ -81,6 +82,9 @@ function App() {
               } />
               <Route className="About" path="/about" element={
                 <About />
+              } />
+              <Route path="/profile" element={
+                <Profile />
               } />
             </Routes>
           )}

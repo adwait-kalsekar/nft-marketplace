@@ -27,6 +27,7 @@ const Create = ({ marketplace, nft }) => {
     if (!image || !price || !name || !description) return
     try{
       const result = await client.add(JSON.stringify({image, price, name, description}))
+      console.log(`priceis ${price}`)
       mintThenList(result)
     } catch(error) {
       console.log("ipfs uri upload error: ", error)
