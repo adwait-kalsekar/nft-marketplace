@@ -9,10 +9,13 @@ import './Card.css';
 const Explore = ({ marketplace, nft }) => {
   const [loading, setLoading] = useState(true)
   const [items, setItems] = useState([])
+  const [address, setAddress] = useState('')
   const loadMarketplaceItems = async () => {
     // Load all unsold items
     const itemCount = await marketplace.itemCount()
     let items = []
+    let address = await marketplace.signer.getAddress()
+        setAddress(address)
     for (let i = 1; i <= itemCount; i++) {
       const item = await marketplace.items(i)
       if (!item.sold) {
@@ -30,7 +33,8 @@ const Explore = ({ marketplace, nft }) => {
           seller: item.seller,
           name: metadata.name,
           description: metadata.description,
-          image: metadata.image
+          image: metadata.image,
+          tipAmount: item.tipAmount
         })
       }
     }
@@ -46,6 +50,13 @@ const Explore = ({ marketplace, nft }) => {
   useEffect(() => {
     loadMarketplaceItems()
   }, [])
+
+  const tip = async (item) => {
+    // tip post owner
+    await (await marketplace.tipOwner(item.itemId, { value: ethers.utils.parseEther("0.1") })).wait()
+    loadMarketplaceItems()
+}
+
   if (loading) return (
     <main style={{ padding: "1rem 0" }}>
       <h2 className='App-loader'>Loading...</h2>
@@ -71,6 +82,12 @@ const Explore = ({ marketplace, nft }) => {
                       <Button onClick={() => buyMarketItem(item)} variant="primary" size="lg">
                         Buy for {ethers.utils.formatEther(item.totalPrice)} ETH
                       </Button>
+                      {address === item.seller ? 
+                      null : <div>
+                          <Button onClick={() => tip(item)} variant="link" size="md">
+                            Tip for 0.1 ETH
+                          </Button>
+                        </div>}
                     </div>
                   </Card.Footer>
                 </Card>

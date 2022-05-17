@@ -21,6 +21,7 @@ contract Marketplace is ReentrancyGuard {
         uint price;
         address payable seller;
         bool sold;
+        uint256 tipAmount;
     }
 
     // itemId -> Item
@@ -40,6 +41,12 @@ contract Marketplace is ReentrancyGuard {
         uint price,
         address indexed seller,
         address indexed buyer
+    ); 
+    
+    event NFTTipped(
+        uint id,
+        uint256 tipAmount,
+        address payable owner
     );
 
     constructor(uint _feePercent) {
@@ -61,7 +68,8 @@ contract Marketplace is ReentrancyGuard {
             _tokenId,
             _price,
             payable(msg.sender),
-            false
+            false,
+            0
         );
         // emit Offered event
         emit Offered(
@@ -98,5 +106,36 @@ contract Marketplace is ReentrancyGuard {
     }
     function getTotalPrice(uint _itemId) view public returns(uint){
         return((items[_itemId].price*(100 + feePercent))/100);
+    }
+    
+    function sellItem(uint _itemId) external nonReentrant {
+        Item storage item = items[_itemId];
+        require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");
+        item.nft.transferFrom(msg.sender, address(this), item.tokenId);
+        console.log(address(this));
+        emit Bought(
+            _itemId,
+            address(item.nft),
+            item.tokenId,
+            item.price,
+            item.seller,
+            address(this)
+        );
+    }
+    
+    function tipOwner(uint _id) external payable {
+        // Make sure the id is valid
+        require(_id > 0 && _id <= itemCount, "Invalid item id");
+        // Fetch the post
+        Item memory _item = items[_id];
+        require(_item.seller != msg.sender, "Cannot tip your own post");
+        // Pay the author by sending them Ether
+        _item.seller.transfer(msg.value);
+        // Increment the tip amount
+        _item.tipAmount += msg.value;
+        // Update the image
+        items[_id] = _item;
+        // Trigger an event
+        emit NFTTipped(_id, _item.tipAmount, _item.seller);
     }
 }

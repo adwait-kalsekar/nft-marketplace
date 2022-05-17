@@ -18,7 +18,12 @@ export default function MyPurchases({ marketplace, nft, account }) {
     //Fetch metadata of each nft and add that to listedItem object.
     const purchases = await Promise.all(results.map(async i => {
       // fetch arguments from each result
+      console.log(`i before args = ${i}`)
       i = i.args
+      console.log(`i after args = ${i}`)
+      const item = await marketplace.items(i.tokenId)
+      console.log(`item.sellOwned ${item.sellOwned}`)
+      
       // get uri url from nft contract
       const uri = await nft.tokenURI(i.tokenId)
       // use uri to fetch the nft metadata stored on ipfs 
@@ -27,6 +32,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
       // get total price of item (item price + fee)
       const totalPrice = await marketplace.getTotalPrice(i.itemId)
       // define listed item object
+      
       let purchasedItem = {
         totalPrice,
         price: i.price,
@@ -35,9 +41,10 @@ export default function MyPurchases({ marketplace, nft, account }) {
         description: metadata.description,
         image: metadata.image
       }
-      console.log(typeof(i.price))
+      console.log(purchasedItem)
       return purchasedItem
     }))
+    console.log(purchases)
     setLoading(false)
     setPurchases(purchases)
   }
@@ -46,10 +53,9 @@ export default function MyPurchases({ marketplace, nft, account }) {
     // approve marketplace to spend nft
     await(await nft.setApprovalForAll(marketplace.address, true)).wait()
     // add nft to marketplace
-    //item.price = item.price / 10**18
     const listingPrice = ethers.utils.parseEther(ethers.utils.formatEther(item.price))
     console.log(`listing price is ${(listingPrice)}`)
-    await(await marketplace.makeItem(nft.address, item.itemId, listingPrice)).wait()
+    await(await marketplace.sellItem(item.itemId)).wait()
   }
   
   useEffect(() => {

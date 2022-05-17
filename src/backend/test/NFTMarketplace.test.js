@@ -1,3 +1,4 @@
+/* eslint-disable jest/valid-expect */
 const { expect } = require("chai"); 
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
@@ -163,5 +164,38 @@ describe("NFTMarketplace", function () {
         marketplace.connect(addr3).purchaseItem(1, {value: totalPriceInWei})
       ).to.be.revertedWith("item already sold");
     });
-  })
+  });
+  describe("Sell Owned Items", function () {
+    let price = 2
+    let fee = (feePercent/100)*price
+    let totalPriceInWei
+    beforeEach(async function () {
+      // addr1 mints an nft
+      await nft.connect(addr1).mint(URI)
+      // addr1 approves marketplace to spend tokens
+      await nft.connect(addr1).setApprovalForAll(marketplace.address, true)
+      // addr1 makes their nft a marketplace item.
+      await marketplace.connect(addr1).makeItem(nft.address, 1 , toWei(price))
+      
+      const sellerInitalEthBal = await addr1.getBalance()
+      const feeAccountInitialEthBal = await deployer.getBalance()
+      // fetch items total price (market fees + item price)
+      totalPriceInWei = await marketplace.getTotalPrice(1);
+      // addr 2 purchases item.
+      await marketplace.connect(addr2).purchaseItem(1, {value: totalPriceInWei})
+
+      it("Should be able to sell NFT", async function () {
+        await marketplace.connect(addr2).sellItem(1).to.emit(marketplace, "Bought")
+        .withArgs(
+          1,
+          nft.address,
+          1,
+          toWei(price),
+          addr2.address,
+          marketplace.address
+        )
+      })
+    })
+    
+  });
 })
