@@ -74,10 +74,10 @@ function App() {
           ) : (
             <Routes>
               <Route path="/" element={
-                <Explore marketplace={marketplace} nft={nft} />
+                <Explore marketplace={marketplace} nft={nft}/>
               } />
               <Route path="/create" element={
-                <Create marketplace={marketplace} nft={nft} />
+                <Create marketplace={marketplace} nft={nft} profilenft={profilenft}/>
               } />
               <Route path="/my-listed-items" element={
                 <MyListedItems marketplace={marketplace} nft={nft} account={account} />

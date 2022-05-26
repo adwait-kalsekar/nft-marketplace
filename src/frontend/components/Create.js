@@ -1,15 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
 import { Row, Form, Button } from 'react-bootstrap'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
-import './Create.css';
+import { Link } from 'react-router-dom'
+
+import './Create.css'
+import './App.css'
+
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
-const Create = ({ marketplace, nft }) => {
+const Create = ({ marketplace, nft, profilenft }) => {
   const [image, setImage] = useState('')
   const [price, setPrice] = useState(null)
   const [name, setName] = useState('')
+  const [hasProfile, setHasProfile] = useState(false)
   const [description, setDescription] = useState('')
+
+  const checkProfile = async () => {
+    let address = await profilenft.signer.getAddress()
+    const balance = await profilenft.balanceOf(address)
+    setHasProfile(() => balance > 0)
+  }
+
+  useEffect(() => {
+    if (!hasProfile) {
+        checkProfile()
+    }
+})
+
   const uploadToIPFS = async (event) => {
     event.preventDefault()
     const file = event.target.files[0]
@@ -46,30 +64,41 @@ const Create = ({ marketplace, nft }) => {
     await(await marketplace.makeItem(nft.address, id, listingPrice)).wait()
   }
   return (
-    <div className="container-fluid mt-5">
-      <div className="row">
-        <main role="main" className="col-lg-12 mx-auto" style={{ maxWidth: '1000px' }}>
-          <div className="content mx-auto">
-            <Row className="g-4">
-              <Form.Control
-                type="file"
-                required
-                name="file"
-                onChange={uploadToIPFS}
-                className='bg'
-              />
-              <Form.Control onChange={(e) => setName(e.target.value)} size="lg" required type="text" placeholder="Name" className='bg' />
-              <Form.Control onChange={(e) => setDescription(e.target.value)} size="lg" required as="textarea" placeholder="Description" className='bg' />
-              <Form.Control onChange={(e) => setPrice(e.target.value)} size="lg" required type="number" placeholder="Price in ETH" className='bg' />
-              <div className="d-grid px-0">
-                <Button onClick={createNFT} variant="primary" size="lg">
-                  Create & List NFT!
-                </Button>
+    <div className="flex justify-center">
+      {hasProfile ?
+        (<div className="container-fluid mt-5">
+          <div className="row">
+            <main role="main" className="col-lg-12 mx-auto" style={{ maxWidth: '1000px' }}>
+              <div className="content mx-auto">
+                <Row className="g-4">
+                  <Form.Control
+                    type="file"
+                    required
+                    name="file"
+                    onChange={uploadToIPFS}
+                    className='bg'
+                  />
+                  <Form.Control onChange={(e) => setName(e.target.value)} size="lg" required type="text" placeholder="Name" className='bg' />
+                  <Form.Control onChange={(e) => setDescription(e.target.value)} size="lg" required as="textarea" placeholder="Description" className='bg' />
+                  <Form.Control onChange={(e) => setPrice(e.target.value)} size="lg" required type="number" placeholder="Price in ETH" className='bg' />
+                  <div className="d-grid px-0">
+                    <Button onClick={createNFT} variant="primary" size="lg">
+                      Create & List NFT!
+                    </Button>
+                  </div>
+                </Row>
               </div>
-            </Row>
+            </main>
           </div>
-        </main>
-      </div>
+        </div>)
+        :
+        (<div>
+          <main style={{ padding: "1rem 0" }}>
+            <h2 className='App-text'>Please Create a Profile to Sell your Digital Assets</h2>
+            <h4>Mint your profile <Link to={'/profile'}>here</Link></h4>
+          </main>
+        </div>)
+      }
     </div>
   );
 }

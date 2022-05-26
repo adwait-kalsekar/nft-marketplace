@@ -49,6 +49,10 @@ a {
   color: white;
 }
 
+.App-text {
+  color: white;
+}
+
 .About{
   text-align: left;
 }

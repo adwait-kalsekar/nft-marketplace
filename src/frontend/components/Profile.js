@@ -89,10 +89,10 @@ const Profile = ({ contract }) => {
     )
     return (
         <div className="mt-4 text-center">
-            {profile ? (<div className="mb-3"><h3 className="mb-3 App-loader">{profile.username}</h3>
+            {profile ? (<div className="mb-3"><h3 className="mb-3 App-text">{profile.username}</h3>
                 <img className="mb-3" style={{ width: '400px' }} src={profile.avatar} /></div>)
                 :
-                <h4 className="mb-4 App-loader">No NFT profile, please create one...</h4>}
+                <h4 className="mb-4 App-text">No NFT profile, please create one...</h4>}
 
             <div className="row">
                 <main role="main" className="col-lg-12 mx-auto" style={{ maxWidth: '1000px' }}>
