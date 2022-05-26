@@ -14,6 +14,8 @@ import MarketplaceAbi from '../contractsData/Marketplace.json'
 import MarketplaceAddress from '../contractsData/Marketplace-address.json'
 import NFTAbi from '../contractsData/NFT.json'
 import NFTAddress from '../contractsData/NFT-address.json'
+import ProfileNFTAbi from '../contractsData/ProfileNFT.json'
+import ProfileNFTAddress from '../contractsData/ProfileNFT-address.json'
 import { useState } from 'react'
 import { ethers } from "ethers"
 import { Spinner } from 'react-bootstrap'
@@ -25,6 +27,7 @@ function App() {
   const [account, setAccount] = useState(null)
   const [nft, setNFT] = useState({})
   const [marketplace, setMarketplace] = useState({})
+  const [profilenft, setProfilenft] = useState({})
   // MetaMask Login/Connect
   const web3Handler = async () => {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -50,6 +53,8 @@ function App() {
     setMarketplace(marketplace)
     const nft = new ethers.Contract(NFTAddress.address, NFTAbi.abi, signer)
     setNFT(nft)
+    const profilenft = new ethers.Contract(ProfileNFTAddress.address, ProfileNFTAbi.abi, signer)
+    setProfilenft(profilenft)
     setLoading(false)
   }
 
@@ -84,7 +89,7 @@ function App() {
                 <About />
               } />
               <Route path="/profile" element={
-                <Profile />
+                <Profile contract={profilenft}/>
               } />
             </Routes>
           )}

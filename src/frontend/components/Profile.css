@@ -1,0 +1,13 @@
+.bg {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-bottom: 2px solid grey;
+}
+
+.bg:focus{
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-bottom: 2px 
+}
