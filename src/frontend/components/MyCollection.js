@@ -85,13 +85,15 @@ export default function MyPurchases({ marketplace, nft, account }) {
   }
   
   const sellNFT = async (item) => {
+    console.log(`item.price: ${item.price}`)
+    //item.price += (10/100) * item.price
+    //console.log(`item.price: ${item.price}`)
+    const listingPrice = Number(ethers.utils.formatEther(item.totalPrice)) + (10/100) * Number((ethers.utils.formatEther(item.totalPrice)))
+    console.log(`listing price is ${(listingPrice)}`)
     // approve marketplace to spend nft
     await(await nft.setApprovalForAll(marketplace.address, true)).wait()
     console.log(marketplace.address)
     // add nft to marketplace
-    console.log(`item.price: ${item.price}`)
-    const listingPrice = ethers.utils.parseEther(ethers.utils.formatEther(item.price))
-    console.log(`listing price is ${(listingPrice)}`)
     await(await marketplace.sellItem(item.itemId)).wait()
     loadPurchasedItems();
   }
@@ -128,7 +130,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
                     <br></br>
                     <br></br>
                     <Button onClick={() => sellNFT(item)} variant="primary" size="lg">
-                      Sell for {ethers.utils.formatEther(item.totalPrice)}
+                      Sell for {Number(ethers.utils.formatEther(item.totalPrice)) + (10/100) * Number((ethers.utils.formatEther(item.totalPrice)))}
                     </Button>
                     </div>
                   </Card.Footer>

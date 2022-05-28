@@ -61,6 +61,7 @@ const Create = ({ marketplace, nft, profilenft }) => {
     await(await nft.setApprovalForAll(marketplace.address, true)).wait()
     // add nft to marketplace
     const listingPrice = ethers.utils.parseEther(price.toString())
+    console.log(`listing price is: ${listingPrice}`)
     await(await marketplace.makeItem(nft.address, id, listingPrice)).wait()
   }
   return (

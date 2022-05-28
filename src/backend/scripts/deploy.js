@@ -13,7 +13,7 @@ async function main() {
   const Marketplace = await ethers.getContractFactory("Marketplace");
   const ProfileNFT = await ethers.getContractFactory("ProfileNFT");
   // deploy contracts
-  const marketplace = await Marketplace.deploy(1);
+  const marketplace = await Marketplace.deploy(1, 10);
   const nft = await NFT.deploy();
   const profilenft = await ProfileNFT.deploy();
   // Save copies of each contracts abi and address to the frontend.

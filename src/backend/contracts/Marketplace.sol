@@ -12,6 +12,7 @@ contract Marketplace is ReentrancyGuard {
     // Variables
     address payable public immutable feeAccount; // the account that receives fees
     uint public immutable feePercent; // the fee percentage on sales 
+    uint public immutable resellPercent;
     uint public itemCount; 
 
     struct Item {
@@ -50,9 +51,10 @@ contract Marketplace is ReentrancyGuard {
         address payable owner
     );
 
-    constructor(uint _feePercent) {
+    constructor(uint _feePercent, uint _resellPercent) {
         feeAccount = payable(msg.sender);
         feePercent = _feePercent;
+        resellPercent = _resellPercent;
     }
 
     // Make item to offer on the marketplace
@@ -113,12 +115,14 @@ contract Marketplace is ReentrancyGuard {
     }
     
     function sellItem(uint _itemId) external payable nonReentrant {
+        uint _resellPrice = getResellPrice(_itemId);
         Item storage item = items[_itemId];
         require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");
         require(item.owner == msg.sender, "Only owner can perform sell Functionality");
         item.nft.transferFrom(msg.sender, address(this), item.tokenId);
         item.sold = false;
         item.owner = payable(address(this));
+        item.price = _resellPrice;
         console.log(address(this));
         emit Bought(
             _itemId,
@@ -128,6 +132,10 @@ contract Marketplace is ReentrancyGuard {
             item.seller,
             address(this)
         );
+    }
+
+    function getResellPrice(uint _itemId) view public returns (uint){
+        return((items[_itemId].price*(100 + resellPercent))/100);
     }
     
     function tipOwner(uint _id) external payable {
