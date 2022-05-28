@@ -56,7 +56,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
     setAddress(account)
     for (let i = 1; i <= itemCount; i++) {
       const item = await marketplace.items(i)
-      if ((item.owner).toString().toLowerCase() === account.toString().toLowerCase()) {
+      if ((item.owner).toString().toLowerCase() === account.toString().toLowerCase() && item.sold) {
         console.log("item.owner", (item.owner).toString().toLowerCase())
         // get uri url from nft contract
         const uri = await nft.tokenURI(item.tokenId)
@@ -70,6 +70,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
           totalPrice,
           price: item.price,
           itemId: item.itemId,
+          sold: item.sold,
           seller: item.seller,
           owner: item.owner,
           name: metadata.name,

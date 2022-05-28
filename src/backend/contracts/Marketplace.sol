@@ -71,7 +71,7 @@ contract Marketplace is ReentrancyGuard {
             _tokenId,
             _price,
             payable(msg.sender),
-            payable(address(this)),
+            payable(msg.sender),
             false,
             0
         );
@@ -92,7 +92,7 @@ contract Marketplace is ReentrancyGuard {
         require(msg.value >= _totalPrice, "not enough ether to cover item price and market fee");
         require(!item.sold, "item already sold");
         // pay seller and feeAccount
-        item.seller.transfer(item.price);
+        item.owner.transfer(item.price);
         feeAccount.transfer(_totalPrice - item.price);
         // update item to sold
         item.sold = true;
@@ -121,7 +121,6 @@ contract Marketplace is ReentrancyGuard {
         require(item.owner == msg.sender, "Only owner can perform sell Functionality");
         item.nft.transferFrom(msg.sender, address(this), item.tokenId);
         item.sold = false;
-        item.owner = payable(address(this));
         item.price = _resellPrice;
         console.log(address(this));
         emit Bought(
