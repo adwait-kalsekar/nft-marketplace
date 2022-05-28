@@ -15,7 +15,7 @@ const Explore = ({ marketplace, nft }) => {
     const itemCount = await marketplace.itemCount()
     let items = []
     let address = await marketplace.signer.getAddress()
-        setAddress(address)
+    setAddress(address)
     for (let i = 1; i <= itemCount; i++) {
       const item = await marketplace.items(i)
       if (!item.sold) {

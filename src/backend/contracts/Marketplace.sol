@@ -20,6 +20,7 @@ contract Marketplace is ReentrancyGuard {
         uint tokenId;
         uint price;
         address payable seller;
+        address payable owner;
         bool sold;
         uint256 tipAmount;
     }
@@ -68,6 +69,7 @@ contract Marketplace is ReentrancyGuard {
             _tokenId,
             _price,
             payable(msg.sender),
+            payable(address(this)),
             false,
             0
         );
@@ -92,6 +94,8 @@ contract Marketplace is ReentrancyGuard {
         feeAccount.transfer(_totalPrice - item.price);
         // update item to sold
         item.sold = true;
+        // update item owner
+        item.owner = payable(msg.sender);
         // transfer nft to buyer
         item.nft.transferFrom(address(this), msg.sender, item.tokenId);
         // emit Bought event
@@ -108,10 +112,13 @@ contract Marketplace is ReentrancyGuard {
         return((items[_itemId].price*(100 + feePercent))/100);
     }
     
-    function sellItem(uint _itemId) external nonReentrant {
+    function sellItem(uint _itemId) external payable nonReentrant {
         Item storage item = items[_itemId];
         require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");
+        require(item.owner == msg.sender, "Only owner can perform sell Functionality");
         item.nft.transferFrom(msg.sender, address(this), item.tokenId);
+        item.sold = false;
+        item.owner = payable(address(this));
         console.log(address(this));
         emit Bought(
             _itemId,

@@ -11,40 +11,75 @@ export default function MyPurchases({ marketplace, nft, account }) {
   const [loading, setLoading] = useState(true)
   const [purchases, setPurchases] = useState([])
   const [time, setTime] = useState(false)
+  const [address, setAddress] = useState('')
+  // const loadPurchasedItems = async () => {
+  //   // Fetch purchased items from marketplace by quering Offered events with the buyer set as the user
+  //   const filter =  marketplace.filters.Bought(null,null,null,null,null,account)
+  //   const results = await marketplace.queryFilter(filter)
+  //   //Fetch metadata of each nft and add that to listedItem object.
+  //   const purchases = await Promise.all(results.map(async i => {
+  //     // fetch arguments from each result
+  //     console.log(`i before args = ${i}`)
+  //     i = i.args
+  //     console.log(`i after args = ${i}`)
+  //     const item = await marketplace.items(i.tokenId)
+  //     console.log(`item.sellOwned ${item.sellOwned}`)
+      
+  //     // get uri url from nft contract
+  //     const uri = await nft.tokenURI(i.tokenId)
+  //     // use uri to fetch the nft metadata stored on ipfs 
+  //     const response = await fetch(uri)
+  //     const metadata = await response.json()
+  //     // get total price of item (item price + fee)
+  //     const totalPrice = await marketplace.getTotalPrice(i.itemId)
+  //     // define listed item object
+      
+  //     let purchasedItem = {
+  //       totalPrice,
+  //       price: i.price,
+  //       itemId: i.itemId,
+  //       name: metadata.name,
+  //       description: metadata.description,
+  //       image: metadata.image
+  //     }
+  //     console.log(purchasedItem)
+  //     return purchasedItem
+  //   }))
+  //   console.log(purchases)
+  //   setLoading(false)
+  //   setPurchases(purchases)
+  // }
+
   const loadPurchasedItems = async () => {
-    // Fetch purchased items from marketplace by quering Offered events with the buyer set as the user
-    const filter =  marketplace.filters.Bought(null,null,null,null,null,account)
-    const results = await marketplace.queryFilter(filter)
-    //Fetch metadata of each nft and add that to listedItem object.
-    const purchases = await Promise.all(results.map(async i => {
-      // fetch arguments from each result
-      console.log(`i before args = ${i}`)
-      i = i.args
-      console.log(`i after args = ${i}`)
-      const item = await marketplace.items(i.tokenId)
-      console.log(`item.sellOwned ${item.sellOwned}`)
-      
-      // get uri url from nft contract
-      const uri = await nft.tokenURI(i.tokenId)
-      // use uri to fetch the nft metadata stored on ipfs 
-      const response = await fetch(uri)
-      const metadata = await response.json()
-      // get total price of item (item price + fee)
-      const totalPrice = await marketplace.getTotalPrice(i.itemId)
-      // define listed item object
-      
-      let purchasedItem = {
-        totalPrice,
-        price: i.price,
-        itemId: i.itemId,
-        name: metadata.name,
-        description: metadata.description,
-        image: metadata.image
+    const itemCount = await marketplace.itemCount()
+    let purchases = []
+    setAddress(account)
+    for (let i = 1; i <= itemCount; i++) {
+      const item = await marketplace.items(i)
+      if ((item.owner).toString().toLowerCase() === account.toString().toLowerCase()) {
+        console.log("item.owner", (item.owner).toString().toLowerCase())
+        // get uri url from nft contract
+        const uri = await nft.tokenURI(item.tokenId)
+        // use uri to fetch the nft metadata stored on ipfs 
+        const response = await fetch(uri)
+        const metadata = await response.json()
+        // get total price of item (item price + fee)
+        const totalPrice = await marketplace.getTotalPrice(item.itemId)
+        // Add item to items array
+        purchases.push({
+          totalPrice,
+          price: item.price,
+          itemId: item.itemId,
+          seller: item.seller,
+          owner: item.owner,
+          name: metadata.name,
+          description: metadata.description,
+          image: metadata.image,
+        })
       }
-      console.log(purchasedItem)
-      return purchasedItem
-    }))
+    }
     console.log(purchases)
+    console.log(address)
     setLoading(false)
     setPurchases(purchases)
   }
@@ -52,10 +87,13 @@ export default function MyPurchases({ marketplace, nft, account }) {
   const sellNFT = async (item) => {
     // approve marketplace to spend nft
     await(await nft.setApprovalForAll(marketplace.address, true)).wait()
+    console.log(marketplace.address)
     // add nft to marketplace
+    console.log(`item.price: ${item.price}`)
     const listingPrice = ethers.utils.parseEther(ethers.utils.formatEther(item.price))
     console.log(`listing price is ${(listingPrice)}`)
     await(await marketplace.sellItem(item.itemId)).wait()
+    loadPurchasedItems();
   }
   
   useEffect(() => {
