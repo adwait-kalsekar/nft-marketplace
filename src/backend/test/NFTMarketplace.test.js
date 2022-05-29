@@ -165,7 +165,6 @@ describe("NFTMarketplace", function () {
       ).to.be.revertedWith("item already sold");
     });
   });
-
   describe("Sell Owned Items", function () {
     let price = 2
     let fee = (feePercent/100)*price
@@ -184,18 +183,19 @@ describe("NFTMarketplace", function () {
       totalPriceInWei = await marketplace.getTotalPrice(1);
       // addr 2 purchases item.
       await marketplace.connect(addr2).purchaseItem(1, {value: totalPriceInWei})
-    });
-    it("Should be able to sell NFT", async function () {
-      await expect(marketplace.connect(addr2).sellItem(1)).to.emit(marketplace, "Bought")
-      .withArgs(
-        1,
-        nft.address,
-        1,
-        toWei(price),
-        addr2.address,
-        marketplace.address
-      )
-    });
-  });
 
+      it("Should be able to sell NFT", async function () {
+        await marketplace.connect(addr2).sellItem(1).to.emit(marketplace, "Bought")
+        .withArgs(
+          1,
+          nft.address,
+          1,
+          toWei(price),
+          addr2.address,
+          marketplace.address
+        )
+      })
+    })
+    
+  });
 })

@@ -122,6 +122,7 @@ contract Marketplace is ReentrancyGuard {
         item.nft.transferFrom(msg.sender, address(this), item.tokenId);
         item.sold = false;
         item.price = _resellPrice;
+        item.seller = payable(msg.sender);
         console.log(address(this));
         emit Bought(
             _itemId,

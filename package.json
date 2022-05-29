@@ -1,33 +1,88 @@
 {
-  "name": "nft_marketplace",
-  "version": "0.1.0",
-  "private": false,
+  "name": "nft-marketplace",
+  "version": "1.2.0",
+  "description": "React version of NFT Marketplace",
+  "main": "index.js",
+  "author": "Group B54",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creativetimofficial/blk-design-system-react.git"
+  },
+  "bugs": {
+    "url": "https://github.com/creativetimofficial/blk-design-system-react/issues"
+  },
+  "homepage": ".",
+  "keywords": [
+    "react",
+    "reactjs",
+    "blk",
+    "blk-react",
+    "design",
+    "design-react",
+    "system",
+    "system-react",
+    "design-system",
+    "design-system-react",
+    "blk-design",
+    "blk-design-react",
+    "blk-system",
+    "blk-system-react",
+    "blk-design-system",
+    "blk-design-system-react"
+  ],
   "dependencies": {
     "@babel/preset-react": "^7.16.7",
     "@nomiclabs/hardhat-ethers": "^2.0.5",
     "@nomiclabs/hardhat-waffle": "^2.0.2",
     "@openzeppelin/contracts": "^4.5.0",
-    "@testing-library/jest-dom": "^5.16.2",
-    "@testing-library/react": "^12.1.3",
-    "@testing-library/user-event": "^13.5.0",
-    "bootstrap": "^5.1.3",
+    "@testing-library/jest-dom": "5.11.6",
+    "@testing-library/react": "11.2.2",
+    "@testing-library/user-event": "12.2.2",
+    "ajv": "^8.11.0",
+    "bootstrap": "^4.5.3",
     "chai": "^4.3.6",
+    "chart.js": "2.9.4",
+    "classnames": "2.2.6",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.4",
-    "ipfs-http-client": "^56.0.1",
+    "file-loader": "^6.2.0",
+    "glob-parent": "^6.0.2",
+    "gulp": "^4.0.2",
+    "gulp-append-prepend": "1.0.8",
+    "hardhat": "^2.9.6",
+    "ipfs-http-client": "^56.0.3",
+    "moment": "^2.29.3",
+    "node-sass": "^7.0.1",
+    "node-sass-package-importer": "^5.3.2",
+    "nouislider": "14.6.3",
+    "perfect-scrollbar": "1.5.0",
+    "postcss": "^8.4.12",
     "react": "^17.0.2",
-    "react-bootstrap": "^2.1.2",
-    "react-dom": "^17.0.2",
+    "react-bootstrap": "^2.4.0",
+    "react-chartjs-2": "2.11.1",
+    "react-datetime": "3.0.4",
+    "react-dom": "17.0.2",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "5.0.0",
-    "web-vitals": "^2.1.4"
+    "react-scripts": "^5.0.1",
+    "reactstrap": "^8.10.1",
+    "url-loader": "^4.1.1",
+    "web-vitals": "1.0.1"
+  },
+  "optionalDependencies": {
+    "jquery": "3.5.1",
+    "typescript": "4.1.2"
   },
   "scripts": {
     "deploy": "npx hardhat run src/backend/scripts/deploy.js --network localhost",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && gulp licenses",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
+    "compile-sass": "node-sass --importer node_modules/node-sass-package-importer/dist/cli.js src/assets/scss/blk-design-system-react.scss src/assets/css/blk-design-system-react.css",
+    "minify-sass": "node-sass --importer node_modules/node-sass-package-importer/dist/cli.js src/assets/scss/blk-design-system-react.scss src/assets/css/blk-design-system-react.min.css --output-style compressed",
+    "map-sass": "node-sass --importer node_modules/node-sass-package-importer/dist/cli.js src/assets/scss/blk-design-system-react.scss src/assets/css/blk-design-system-react.css --source-map true"
   },
   "eslintConfig": {
     "extends": [
@@ -48,15 +103,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.16.11",
-    "hardhat": "^2.8.4"
-  },
-  "description": "NFT Marketplace",
-  "main": "hardhat.config.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/adwait-kalsekar/nft-marketplace"
-  },
-  "author": "adwait-kalsekar",
-  "license": "ISC"
+    "svgo": "^2.8.0"
+  }
 }

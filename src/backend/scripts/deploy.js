@@ -1,6 +1,3 @@
-const { ethers } = require("hardhat");
-
-/* eslint-disable no-undef */
 async function main() {
   const [deployer] = await ethers.getSigners();
 
@@ -11,20 +8,17 @@ async function main() {
   // Get the ContractFactories and Signers here.
   const NFT = await ethers.getContractFactory("NFT");
   const Marketplace = await ethers.getContractFactory("Marketplace");
-  const ProfileNFT = await ethers.getContractFactory("ProfileNFT");
   // deploy contracts
   const marketplace = await Marketplace.deploy(1, 10);
   const nft = await NFT.deploy();
-  const profilenft = await ProfileNFT.deploy();
   // Save copies of each contracts abi and address to the frontend.
   saveFrontendFiles(marketplace , "Marketplace");
   saveFrontendFiles(nft , "NFT");
-  saveFrontendFiles(profilenft, "ProfileNFT");
 }
 
 function saveFrontendFiles(contract, name) {
   const fs = require("fs");
-  const contractsDir = __dirname + "/../../frontend/contractsData";
+  const contractsDir = __dirname + "/../../contractsData";
 
   if (!fs.existsSync(contractsDir)) {
     fs.mkdirSync(contractsDir);
