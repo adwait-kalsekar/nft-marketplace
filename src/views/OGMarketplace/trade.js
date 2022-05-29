@@ -52,12 +52,15 @@ export default function TradePage({marketplace, nft }) {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
   const [address, setAddress] = useState("");
+  const [search, setSearch] = useState("");
+  const [nosearch, setNosearch] = useState(false);
   const loadMarketplaceItems = async () => {
     console.log(`nft: ${nft}`);
     console.log(`marketplace: ${marketplace}`);
     // Load all unsold items
     const itemCount = await marketplace.itemCount();
     let items = [];
+    let searchedItems = [];
     let address = await marketplace.signer.getAddress();
     setAddress(address);
     for (let i = 1; i <= itemCount; i++) {
@@ -83,7 +86,21 @@ export default function TradePage({marketplace, nft }) {
       }
     }
     setLoading(false);
-    setItems(items);
+    if(search) {
+      searchedItems = items.filter((item) => {
+        return item.name.toString().toLowerCase().trim() === search.toString().toLowerCase().trim()
+      })
+      if(!searchedItems) {
+        setNosearch(true);
+      }
+      else{
+        setNosearch(false);
+      }
+      setItems(searchedItems);
+    }
+    else{
+      setItems(items);
+    }
   };
 
   const buyMarketItem = async (item) => {
@@ -92,6 +109,11 @@ export default function TradePage({marketplace, nft }) {
     ).wait();
     loadMarketplaceItems();
   };
+
+  const searchMarketItem = async (search) => {
+    console.log(`search: ${search}`);
+    loadMarketplaceItems();
+  }
 
   useEffect(() => {
     loadMarketplaceItems();
@@ -122,6 +144,8 @@ export default function TradePage({marketplace, nft }) {
         <div className="page-header" style={{ "max-height": "100%" }}>
           <div className="page-header-image" />
           <div className="content">
+            <input type="text" onChange={(e) => setSearch(e.target.value)} value={search}/>
+            <button onClick={() => searchMarketItem(search)}>Search</button>
             {items.length > 0 ? (
               <Container>
                 <Row xs={1} md={2} lg={4}>
@@ -224,6 +248,15 @@ export default function TradePage({marketplace, nft }) {
                   id="square6"
                   style={{ transform: squares1to6 }}
                 />
+              </Container>
+            ) : !nosearch ? (
+              <Container>
+                <h2 className="App-loader">
+                  Oops .... No digital asset found
+                </h2>
+                <h4>
+                  <a href="/trade">Go Back</a>
+                </h4>
               </Container>
             ) : (
               <Container>
