@@ -21,13 +21,13 @@ import Footer from "components/Footer/Footer.js";
 // web3 imports
 import { ethers } from "ethers";
 
-export default function TradePage({marketplace, nft }) {
+export default function TradePage({ marketplace, nft }) {
   const [squares1to6, setSquares1to6] = React.useState("");
 
   React.useEffect(() => {
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", followCursor);
-    
+
     // Specify how to clean up after this effect:
     return function cleanup() {
       document.body.classList.toggle("register-page");
@@ -86,19 +86,20 @@ export default function TradePage({marketplace, nft }) {
       }
     }
     setLoading(false);
-    if(search) {
+    if (search) {
       searchedItems = items.filter((item) => {
-        return item.name.toString().toLowerCase().trim() === search.toString().toLowerCase().trim()
-      })
-      if(!searchedItems) {
+        return (
+          item.name.toString().toLowerCase().trim() ===
+          search.toString().toLowerCase().trim()
+        );
+      });
+      if (!searchedItems) {
         setNosearch(true);
-      }
-      else{
+      } else {
         setNosearch(false);
       }
       setItems(searchedItems);
-    }
-    else{
+    } else {
       setItems(items);
     }
   };
@@ -113,7 +114,7 @@ export default function TradePage({marketplace, nft }) {
   const searchMarketItem = async (search) => {
     console.log(`search: ${search}`);
     loadMarketplaceItems();
-  }
+  };
 
   useEffect(() => {
     loadMarketplaceItems();
@@ -144,10 +145,33 @@ export default function TradePage({marketplace, nft }) {
         <div className="page-header" style={{ "max-height": "100%" }}>
           <div className="page-header-image" />
           <div className="content">
-            <input type="text" onChange={(e) => setSearch(e.target.value)} value={search}/>
-            <button onClick={() => searchMarketItem(search)}>Search</button>
             {items.length > 0 ? (
               <Container>
+                <input
+                  type="text"
+                  style={{
+                    width: "40%",
+                    "border-radius": "0.4285rem",
+                    "border-color": "#2b3553",
+                    "border-width": "2px",
+                    "border-style": "solid",
+                    background: "#1f1f1f",
+                    color: "white",
+                    padding: "10px",
+                    margin: "20px",
+                  }}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search for an nft."
+                  value={search}
+                />
+                <button
+                  className="btn-icon btn-round btn btn-primary"
+                  onClick={() => searchMarketItem(search)}
+                >
+                  <i class="fa-brands fa-searchengin"></i>
+                </button>
+                <br />
+                <br />
                 <Row xs={1} md={2} lg={4}>
                   {items.map((item, idx) => (
                     <Col key={idx} className="overflow-hidden">
@@ -168,9 +192,11 @@ export default function TradePage({marketplace, nft }) {
                           <CardTitle>{item.name}</CardTitle>
                           <CardText>{item.description}</CardText>
                         </CardBody>
-                        <CardFooter className="text-center" style={{ "margin-top": "0px" }}>
-                          {address === item.seller ? 
-                          (
+                        <CardFooter
+                          className="text-center"
+                          style={{ "margin-top": "0px" }}
+                        >
+                          {address === item.seller ? (
                             <Button
                               className="btn-success btn-link"
                               color="primary"
@@ -186,12 +212,11 @@ export default function TradePage({marketplace, nft }) {
                               variant="primary"
                               size="lg"
                             >
-                              Buy for {ethers.utils.formatEther(item.totalPrice)}{" "}
-                              ETH
+                              Buy for{" "}
+                              {ethers.utils.formatEther(item.totalPrice)} ETH
                             </Button>
                           )}
-                          {address === item.seller ? 
-                          (
+                          {address === item.seller ? (
                             <Button
                               onClick={() => tip(item)}
                               className="btn-simple btn-round"
@@ -249,11 +274,9 @@ export default function TradePage({marketplace, nft }) {
                   style={{ transform: squares1to6 }}
                 />
               </Container>
-            ) : !nosearch ? (
+            ) : search && !nosearch ? (
               <Container>
-                <h2 className="App-loader">
-                  Oops .... No digital asset found
-                </h2>
+                <h2 className="App-loader">Oops .... No digital asset found</h2>
                 <h4>
                   <a href="/trade">Go Back</a>
                 </h4>

@@ -102,11 +102,9 @@ export default function MintPage({ marketplace, nft }) {
       );
       console.log(`priceis ${price}`);
       mintThenList(result);
-     
     } catch (error) {
       console.log("ipfs uri upload error: ", error);
     }
-    
   };
   const mintThenList = async (result) => {
     const uri = `https://ipfs.infura.io/ipfs/${result.path}`;
@@ -118,7 +116,9 @@ export default function MintPage({ marketplace, nft }) {
     await (await nft.setApprovalForAll(marketplace.address, true)).wait();
     // add nft to marketplace
     const listingPrice = ethers.utils.parseEther(price.toString());
-    await (await marketplace.makeItem(nft.address, id, listingPrice)).wait().then(refreshPage);
+    await (await marketplace.makeItem(nft.address, id, listingPrice))
+      .wait()
+      .then(refreshPage);
   };
 
   // -----------------------------------------------------------------------------------------------------------------------
@@ -235,12 +235,9 @@ export default function MintPage({ marketplace, nft }) {
 
                         <FormGroup check className="text-left">
                           <Label check>
-                            <Input type="checkbox" />
+                            <Input type="checkbox" disabled checked />
                             <span className="form-check-sign" />I agree to the{" "}
-                            <a
-                              href="#tos"
-                              onClick={(e) => e.preventDefault()}
-                            >
+                            <a href="#tos" onClick={(e) => e.preventDefault()}>
                               terms and conditions
                             </a>
                             .

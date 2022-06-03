@@ -67,20 +67,19 @@ export default function HomePage() {
             <Row className="row-grid justify-content-between align-items-center text-left">
               <Col lg="6" md="6">
                 <h1 className="text-white">
-                  BUY SOME "COOL" STUFF!
+                  BUY SOME COOL STUFF!
                   <br />
-                  <h3>spend all your money🔪</h3>
+                  <h3>collect fun items!🥳</h3>
                 </h1>
 
                 <p className="text-white mb-3">
                   The NFT Marketplace of your dreams is HERE! We've made it
-                  extremely simple and intuitive for you to drain your life
-                  savings. Who cares about your children's future? Spend all
-                  your money on ape cartoons like a BOSS.
+                  extremely simple and intuitive for you to mint and trade nfts.
+                  Login with your metamask wallet and get started now!!
                 </p>
                 <div className="btn-wrapper mb-3">
                   <p className="category text-success d-inline">
-                    Only 1% market fees habibi
+                    Only 1% market fees!
                   </p>
                   <Button
                     className="btn-link"

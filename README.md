@@ -51,9 +51,9 @@ Execute the script and start the webapp
 
 ## Tech Stack
 
-**Client:** React, Ethers.js (web3)
+**Client:** ReactJS, Bootstrap, Fontawesome, Metamask
 
-**Server:** Node
+**Backend:** Node.js, Ethers.js, Hardhat, IPFS
 
 
 ## License

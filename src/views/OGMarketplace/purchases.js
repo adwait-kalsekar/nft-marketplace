@@ -138,7 +138,7 @@ export default function PurchasesPage({ marketplace, nft, account }) {
           <div className="content">
             {purchases.length > 0 ? (
               <Container>
-                <h2>Listed Items</h2>
+                <h2>Purchased Items</h2>
                 <Row xs={1} md={2} lg={4}>
                   {purchases.map((item, idx) => (
                     <Col key={idx} className="overflow-hidden">
